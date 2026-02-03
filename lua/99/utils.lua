@@ -4,10 +4,15 @@ local M = {}
 --- to make the _99_state have the project directory.
 --- @return string
 function M.random_file()
-  return string.format(
-    "%s/tmp/99-%d",
-    vim.uv.cwd(),
-    math.floor(math.random() * 10000)
+  local temppath = vim.fn.fnamemodify(vim.fn.tempname(), "p")
+
+  if vim.fn.isdirectory(temppath) == 0 then
+    vim.fn.mkdir(temppath, "p")
+  end
+
+  return vim.fs.joinpath(
+    temppath,
+    string.format("99-%s", math.floor(math.random() * 10000))
   )
 end
 
